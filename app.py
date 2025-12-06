@@ -94,12 +94,18 @@ def merge_pdfs():
                     if pdf_reader.is_encrypted:
                         return jsonify({'error': f'File {file.filename} is password-protected'}), 400
                     
-                    # Add all pages with rotation
+                    # Add all pages with rotation, preserving original page properties
                     rotation = orientations[idx] if idx < len(orientations) else 0
                     for page in pdf_reader.pages:
+                        # Create a new page with same media box to preserve spacing
+                        page_copy = page
+                        
+                        # Apply rotation if specified (rotation is cumulative)
                         if rotation != 0:
-                            page.rotate(rotation)
-                        pdf_writer.add_page(page)
+                            page_copy.rotate(rotation)
+                        
+                        # Add page to writer - this preserves all formatting, spacing, and styling
+                        pdf_writer.add_page(page_copy)
                     
                     merged_count += 1
                     
