@@ -18,6 +18,10 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 def index():
     return render_template('index.html')
 
+@app.route('/tools')
+def tools():
+    return render_template('tools.html')
+
 @app.route('/preview', methods=['POST'])
 def preview_pdf():
     """Generate preview of uploaded PDF - returns entire PDF"""

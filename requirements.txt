@@ -1,3 +1,42 @@
+# Core Dependencies
 Flask==3.0.0
 PyPDF2==3.0.1
 Werkzeug==3.0.1
+
+# ============================================
+# OPTIONAL: Advanced Features
+# Uncomment the features you need:
+# ============================================
+
+# Image Processing (JPG/PNG to PDF, Scan to PDF)
+# Requires: Visual C++ Build Tools on Windows
+# Install: pip install Pillow
+# Pillow==10.1.0
+
+# OCR (Make scanned PDFs searchable)
+# Install: pip install pytesseract pdf2image
+# pytesseract==0.3.10
+# pdf2image==1.16.3
+
+# Office Conversions (Word, Excel, PowerPoint)
+# Install: pip install docx2pdf openpyxl
+# docx2pdf==0.1.8
+# openpyxl==3.1.2
+
+# PDF to Office Documents
+# Install: pip install pdf2docx tabula-py
+# pdf2docx==0.5.6
+# tabula-py==2.9.0
+
+# HTML to PDF Conversion
+# Install: pip install pdfkit weasyprint
+# pdfkit==1.0.0
+# weasyprint==60.1
+
+# Text & Watermark Features
+# Install: pip install reportlab
+# reportlab==4.0.7
+
+# Advanced PDF Editing
+# Install: pip install PyMuPDF
+# PyMuPDF==1.23.8

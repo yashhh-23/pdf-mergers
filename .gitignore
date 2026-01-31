@@ -45,3 +45,10 @@ Thumbs.db
 # Project specific
 temp_uploads/
 *.pdf
+node_modules/
+npm-debug.log
+package-lock.json
+
+# Test files
+test_files/
+uploads/

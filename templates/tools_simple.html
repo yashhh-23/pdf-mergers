@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Tools - Complete Suite</title>
+    <style>
+        :root {
+            --color-organize: #E74C3C;
+            --color-optimize: #82C341;
+            --color-convert-to: #F39C12;
+            --color-convert-from: #3498DB;
+            --color-edit: #9B59B6;
+            --color-security: #34495E;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #F8F9FA;
+            padding: 20px;
+        }
+
+        .expiry-notice {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px 20px;
+            margin: 0 auto 30px;
+            max-width: 1400px;
+            text-align: center;
+            color: #856404;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 15px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #2C3E50;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #7F8C8D;
+        }
+
+        .tools-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .category {
+            margin-bottom: 50px;
+        }
+
+        .category-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #E0E0E0;
+        }
+
+        .organize .category-header h2 { color: var(--color-organize); }
+        .optimize .category-header h2 { color: var(--color-optimize); }
+        .convert-to .category-header h2 { color: var(--color-convert-to); }
+        .convert-from .category-header h2 { color: var(--color-convert-from); }
+        .edit .category-header h2 { color: var(--color-edit); }
+        .security .category-header h2 { color: var(--color-security); }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-color: currentColor;
+        }
+
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .organize .tool-card { color: var(--color-organize); }
+        .organize .tool-icon { background: rgba(231, 76, 60, 0.1); }
+
+        .optimize .tool-card { color: var(--color-optimize); }
+        .optimize .tool-icon { background: rgba(130, 195, 65, 0.1); }
+
+        .convert-to .tool-card { color: var(--color-convert-to); }
+        .convert-to .tool-icon { background: rgba(243, 156, 18, 0.1); }
+
+        .convert-from .tool-card { color: var(--color-convert-from); }
+        .convert-from .tool-icon { background: rgba(52, 152, 219, 0.1); }
+
+        .edit .tool-card { color: var(--color-edit); }
+        .edit .tool-icon { background: rgba(155, 89, 182, 0.1); }
+
+        .security .tool-card { color: var(--color-security); }
+        .security .tool-icon { background: rgba(52, 73, 94, 0.1); }
+
+        .tool-info {
+            flex: 1;
+        }
+
+        .tool-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2C3E50;
+        }
+
+        .tool-desc {
+            font-size: 0.85rem;
+            color: #7F8C8D;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="expiry-notice">
+        ⏰ Uploaded files will be automatically deleted after 1 hour
+    </div>
+
+    <div class="header">
+        <h1>📄 Complete PDF Tools Suite</h1>
+        <p>All-in-one solution for your PDF needs</p>
+    </div>
+
+    <div class="tools-container">
+        <!-- ORGANIZE PDF -->
+        <div class="category organize">
+            <div class="category-header">
+                <h2>Organize PDF</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">📑</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Merge PDF</div>
+                        <div class="tool-desc">Combine multiple PDFs</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🔀</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Split PDF</div>
+                        <div class="tool-desc">Split into individual pages</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">❌</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Remove Pages</div>
+                        <div class="tool-desc">Delete specific pages</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📋</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Extract Pages</div>
+                        <div class="tool-desc">Extract specific pages</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🔄</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Organize/Reorder</div>
+                        <div class="tool-desc">Reorder pages</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📸</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Scan to PDF</div>
+                        <div class="tool-desc">Convert images to PDF</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OPTIMIZE PDF -->
+        <div class="category optimize">
+            <div class="category-header">
+                <h2>Optimize PDF</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">📦</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Compress</div>
+                        <div class="tool-desc">Reduce file size</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🔧</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Repair</div>
+                        <div class="tool-desc">Fix corrupted PDFs</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🔍</div>
+                    <div class="tool-info">
+                        <div class="tool-name">OCR</div>
+                        <div class="tool-desc">Make searchable</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONVERT TO PDF -->
+        <div class="category convert-to">
+            <div class="category-header">
+                <h2>Convert To PDF</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">🖼️</div>
+                    <div class="tool-info">
+                        <div class="tool-name">JPG to PDF</div>
+                        <div class="tool-desc">Image to PDF</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📄</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Word to PDF</div>
+                        <div class="tool-desc">DOCX to PDF</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📊</div>
+                    <div class="tool-info">
+                        <div class="tool-name">PowerPoint to PDF</div>
+                        <div class="tool-desc">PPTX to PDF</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📈</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Excel to PDF</div>
+                        <div class="tool-desc">XLSX to PDF</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🌐</div>
+                    <div class="tool-info">
+                        <div class="tool-name">HTML to PDF</div>
+                        <div class="tool-desc">HTML to PDF</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONVERT FROM PDF -->
+        <div class="category convert-from">
+            <div class="category-header">
+                <h2>Convert From PDF</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">📦</div>
+                    <div class="tool-info">
+                        <div class="tool-name">PDF to PDF/A</div>
+                        <div class="tool-desc">Archival format</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🖼️</div>
+                    <div class="tool-info">
+                        <div class="tool-name">PDF to JPG</div>
+                        <div class="tool-desc">PDF to images</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📄</div>
+                    <div class="tool-info">
+                        <div class="tool-name">PDF to Word</div>
+                        <div class="tool-desc">PDF to DOCX</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📊</div>
+                    <div class="tool-info">
+                        <div class="tool-name">PDF to PowerPoint</div>
+                        <div class="tool-desc">PDF to PPTX</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📈</div>
+                    <div class="tool-info">
+                        <div class="tool-name">PDF to Excel</div>
+                        <div class="tool-desc">PDF to XLSX</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EDIT PDF -->
+        <div class="category edit">
+            <div class="category-header">
+                <h2>Edit PDF</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">🔄</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Rotate</div>
+                        <div class="tool-desc">Rotate pages</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">#️⃣</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Add Page Numbers</div>
+                        <div class="tool-desc">Number pages</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">💧</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Add Watermark</div>
+                        <div class="tool-desc">Add watermark</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">✂️</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Crop</div>
+                        <div class="tool-desc">Trim margins</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">✏️</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Edit PDF</div>
+                        <div class="tool-desc">Edit content</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECURITY -->
+        <div class="category security">
+            <div class="category-header">
+                <h2>Security</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">🔓</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Unlock</div>
+                        <div class="tool-desc">Remove password</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🔒</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Protect</div>
+                        <div class="tool-desc">Add password</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">✍️</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Sign</div>
+                        <div class="tool-desc">Add signature</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">⛔</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Redact</div>
+                        <div class="tool-desc">Hide content</div>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🔍</div>
+                    <div class="tool-info">
+                        <div class="tool-name">Compare</div>
+                        <div class="tool-desc">Compare PDFs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

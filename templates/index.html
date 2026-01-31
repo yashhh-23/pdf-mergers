@@ -46,6 +46,26 @@
             font-size: 28px;
         }
 
+        .expiry-notice {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #856404;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .expiry-notice::before {
+            content: "⏰";
+            font-size: 18px;
+        }
+
         .section {
             margin-bottom: 30px;
             padding: 20px;
@@ -323,6 +343,21 @@
             color: var(--color-text);
         }
 
+        .rotation-info {
+            display: inline-block;
+            background: var(--color-warning);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .modal.show {
+            display: block !important;
+        }
+
         .loading-preview::after {
             content: '...';
             animation: dots 1.5s steps(4, end) infinite;
@@ -409,6 +444,10 @@
 <body>
     <div class="container">
         <h1>📄 PDF Merger & Sorter</h1>
+
+        <div class="expiry-notice">
+            Uploaded files will be automatically deleted after 1 hour
+        </div>
 
         <div id="statusMessage" class="status-message"></div>
 
@@ -657,8 +696,18 @@
                     }
                     
                     const data = await response.json();
+                    const pdfBase64 = data.preview;
                     
-                    // Display full PDF preview in an iframe
+                    // Create a blob URL from base64 for better browser support
+                    const binaryString = atob(pdfBase64);
+                    const bytes = new Uint8Array(binaryString.length);
+                    for (let i = 0; i < binaryString.length; i++) {
+                        bytes[i] = binaryString.charCodeAt(i);
+                    }
+                    const blob = new Blob([bytes], { type: 'application/pdf' });
+                    const blobUrl = URL.createObjectURL(blob);
+                    
+                    // Display full PDF preview using embed
                     const rotation = this.rotations[index];
                     previewContainer.innerHTML = `
                         <div style="text-align: center; width: 100%;">
@@ -667,18 +716,15 @@
                                 <small style="color: #666;">Total Pages: ${data.pageCount}</small>
                                 ${rotation !== 0 ? `<br><span class="rotation-info">↻ Will be rotated ${rotation}° when merged</span>` : ''}
                             </p>
-                            <div style="width: 100%; height: 650px; border: 2px solid var(--color-border); border-radius: 8px; overflow: hidden;">
-                                <iframe 
-                                    src="data:application/pdf;base64,${data.preview}#view=FitH" 
+                            <div style="width: 100%; height: 650px; border: 2px solid var(--color-border); border-radius: 8px; overflow: hidden; background: white;">
+                                <embed 
+                                    src="${blobUrl}" 
                                     type="application/pdf" 
-                                    style="width: 100%; height: 100%; border: none;">
-                                    <p>Your browser does not support PDF preview. 
-                                       <a href="data:application/pdf;base64,${data.preview}" download="${file.name}">Download PDF</a> to view it.
-                                    </p>
-                                </iframe>
+                                    style="width: 100%; height: 100%;"
+                                    onerror="this.parentElement.innerHTML='<p style=\"padding: 40px; color: #666;\">📄 PDF preview not available. The file is valid and can be merged.</p>'">
                             </div>
                             <p style="margin-top: 10px; color: #666; font-size: 13px;">
-                                💡 Tip: Use the PDF controls to navigate through all pages
+                                💡 Tip: Use the PDF viewer controls to navigate through all pages
                             </p>
                         </div>
                     `;
@@ -782,7 +828,7 @@
                     clearInterval(progressInterval);
                     progressFill.style.width = '100%';
 
-                    this.showStatus(`✓ Successfully merged ${this.files.length} PDFs and downloaded!`, 'success');
+                    this.showStatus(`✓ Successfully merged ${this.files.length} PDFs! Downloaded. Note: Uploaded files will be automatically deleted after 1 hour.`, 'success');
 
                     // Reset after success
                     setTimeout(() => {
