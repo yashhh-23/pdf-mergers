@@ -6,5 +6,5 @@ echo Server will be available at: http://127.0.0.1:5000/tools
 echo.
 echo Press Ctrl+C to stop the server
 echo.
-python app_full.py
+python backend/app_working.py
 pause

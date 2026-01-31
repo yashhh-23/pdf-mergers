@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Tools - Complete Suite</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: #f5f7fa; 
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        .expiry-notice {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            color: #856404;
+            font-weight: 500;
+            text-align: center;
+            font-size: 15px;
+        }
+        
+        h1 { 
+            text-align: center;
+            margin-bottom: 10px; 
+            color: #2c3e50;
+            font-size: 2.2rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid;
+        }
+        
+        .organize { color: #e74c3c; border-color: #e74c3c; }
+        .optimize { color: #27ae60; border-color: #27ae60; }
+        .convert-to { color: #f39c12; border-color: #f39c12; }
+        .convert-from { color: #3498db; border-color: #3498db; }
+        .edit { color: #9b59b6; border-color: #9b59b6; }
+        .security { color: #34495e; border-color: #34495e; }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .tool-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            border-color: #3498db;
+        }
+        
+        .tool-card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .tool-card.disabled:hover {
+            transform: none;
+            border-color: transparent;
+        }
+        
+        .tool-icon { font-size: 36px; margin-bottom: 10px; }
+        .tool-name { font-size: 14px; font-weight: 600; color: #2c3e50; margin-bottom: 5px; }
+        .tool-desc { font-size: 12px; color: #7f8c8d; }
+        .tool-status { font-size: 10px; margin-top: 8px; padding: 3px 8px; border-radius: 10px; display: inline-block; }
+        .status-ready { background: #d5f4e6; color: #27ae60; }
+        .status-soon { background: #ffeaa7; color: #d68910; }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal.active { display: flex; }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: #f0f0f0;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #7f8c8d;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .modal-close:hover { background: #e74c3c; color: white; }
+        
+        .modal-title { font-size: 1.5rem; color: #2c3e50; margin-bottom: 5px; }
+        .modal-desc { color: #7f8c8d; margin-bottom: 25px; }
+        
+        .upload-area {
+            border: 3px dashed #bdc3c7;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9fa;
+            margin-bottom: 20px;
+        }
+        .upload-area:hover { border-color: #3498db; background: #ebf5fb; }
+        .upload-area.dragover { border-color: #27ae60; background: #e8f8f5; }
+        .upload-area.has-files { border-color: #27ae60; border-style: solid; }
+        
+        .upload-icon { font-size: 48px; margin-bottom: 10px; }
+        .upload-text { font-weight: 600; color: #2c3e50; margin-bottom: 5px; }
+        .upload-hint { font-size: 13px; color: #95a5a6; }
+        
+        .file-input { display: none; }
+        
+        .file-list { margin: 20px 0; }
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 4px solid #3498db;
+        }
+        .file-info { display: flex; align-items: center; gap: 10px; }
+        .file-icon { font-size: 20px; }
+        .file-name { font-weight: 500; color: #2c3e50; font-size: 14px; }
+        .file-size { font-size: 12px; color: #95a5a6; }
+        .file-remove {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .file-remove:hover { background: #c0392b; }
+        
+        .options-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .options-section h4 { margin-bottom: 15px; color: #2c3e50; }
+        .option-group { margin-bottom: 15px; }
+        .option-label { display: block; margin-bottom: 5px; font-weight: 500; color: #34495e; font-size: 14px; }
+        .option-input, .option-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .option-input:focus, .option-select:focus { border-color: #3498db; outline: none; }
+        
+        .btn-process {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-process:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(52,152,219,0.4); }
+        .btn-process:disabled { background: #bdc3c7; cursor: not-allowed; transform: none; }
+        
+        .progress-container { margin-top: 20px; display: none; }
+        .progress-bar {
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #27ae60);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .progress-text { text-align: center; margin-top: 10px; color: #7f8c8d; font-size: 14px; }
+        
+        .status-message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+            font-size: 14px;
+        }
+        .status-success { background: #d5f4e6; color: #27ae60; border: 1px solid #27ae60; }
+        .status-error { background: #fadbd8; color: #e74c3c; border: 1px solid #e74c3c; }
+        .status-info { background: #d6eaf8; color: #3498db; border: 1px solid #3498db; }
+        
+        @media (max-width: 768px) {
+            .tools-grid { grid-template-columns: repeat(2, 1fr); }
+            .modal-content { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="expiry-notice">
+            ⏰ Uploaded files will be automatically deleted after 1 hour for your privacy
+        </div>
+        
+        <h1>📄 PDF Tools Suite</h1>
+        <p class="subtitle">All-in-one solution for your PDF needs • 20 tools ready to use</p>
+        
+        <!-- ORGANIZE PDF -->
+        <h2 class="category-title organize">🗂️ ORGANIZE PDF</h2>
+        <div class="tools-grid">
+            <div class="tool-card" onclick="openTool('merge')">
+                <div class="tool-icon">📑</div>
+                <div class="tool-name">Merge PDF</div>
+                <div class="tool-desc">Combine multiple PDFs</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('split')">
+                <div class="tool-icon">✂️</div>
+                <div class="tool-name">Split PDF</div>
+                <div class="tool-desc">Split into pages</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('remove-pages')">
+                <div class="tool-icon">🗑️</div>
+                <div class="tool-name">Remove Pages</div>
+                <div class="tool-desc">Delete pages</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('extract-pages')">
+                <div class="tool-icon">📄</div>
+                <div class="tool-name">Extract Pages</div>
+                <div class="tool-desc">Extract specific pages</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('organize')">
+                <div class="tool-icon">🔀</div>
+                <div class="tool-name">Reorder Pages</div>
+                <div class="tool-desc">Rearrange pages</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+        </div>
+        
+        <!-- OPTIMIZE PDF -->
+        <h2 class="category-title optimize">⚡ OPTIMIZE PDF</h2>
+        <div class="tools-grid">
+            <div class="tool-card" onclick="openTool('compress')">
+                <div class="tool-icon">🗜️</div>
+                <div class="tool-name">Compress PDF</div>
+                <div class="tool-desc">Reduce file size</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('repair')">
+                <div class="tool-icon">🔧</div>
+                <div class="tool-name">Repair PDF</div>
+                <div class="tool-desc">Fix corrupted files</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+        </div>
+        
+        <!-- CONVERT TO PDF -->
+        <h2 class="category-title convert-to">➡️ CONVERT TO PDF</h2>
+        <div class="tools-grid">
+            <div class="tool-card" onclick="openTool('images-to-pdf')">
+                <div class="tool-icon">🖼️</div>
+                <div class="tool-name">Images to PDF</div>
+                <div class="tool-desc">JPG, PNG to PDF</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('word-to-pdf')">
+                <div class="tool-icon">📝</div>
+                <div class="tool-name">Word to PDF</div>
+                <div class="tool-desc">DOCX to PDF</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('excel-to-pdf')">
+                <div class="tool-icon">📊</div>
+                <div class="tool-name">Excel to PDF</div>
+                <div class="tool-desc">XLSX to PDF</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+        </div>
+        
+        <!-- CONVERT FROM PDF -->
+        <h2 class="category-title convert-from">⬅️ CONVERT FROM PDF</h2>
+        <div class="tools-grid">
+            <div class="tool-card" onclick="openTool('pdf-to-images')">
+                <div class="tool-icon">🖼️</div>
+                <div class="tool-name">PDF to Images</div>
+                <div class="tool-desc">PDF to JPG/PNG</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('pdf-to-word')">
+                <div class="tool-icon">📝</div>
+                <div class="tool-name">PDF to Word</div>
+                <div class="tool-desc">PDF to DOCX</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('pdf-to-excel')">
+                <div class="tool-icon">📊</div>
+                <div class="tool-name">PDF to Excel</div>
+                <div class="tool-desc">Extract tables</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('ocr')">
+                <div class="tool-icon">🔍</div>
+                <div class="tool-name">OCR</div>
+                <div class="tool-desc">Extract text from images</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+        </div>
+        
+        <!-- EDIT PDF -->
+        <h2 class="category-title edit">✏️ EDIT PDF</h2>
+        <div class="tools-grid">
+            <div class="tool-card" onclick="openTool('rotate')">
+                <div class="tool-icon">🔄</div>
+                <div class="tool-name">Rotate PDF</div>
+                <div class="tool-desc">Rotate pages</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('crop')">
+                <div class="tool-icon">✂️</div>
+                <div class="tool-name">Crop PDF</div>
+                <div class="tool-desc">Trim margins</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('watermark')">
+                <div class="tool-icon">💧</div>
+                <div class="tool-name">Add Watermark</div>
+                <div class="tool-desc">Text watermark</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('page-numbers')">
+                <div class="tool-icon">🔢</div>
+                <div class="tool-name">Page Numbers</div>
+                <div class="tool-desc">Add numbering</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+        </div>
+        
+        <!-- SECURITY -->
+        <h2 class="category-title security">🔒 SECURITY</h2>
+        <div class="tools-grid">
+            <div class="tool-card" onclick="openTool('protect')">
+                <div class="tool-icon">🔐</div>
+                <div class="tool-name">Protect PDF</div>
+                <div class="tool-desc">Add password</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+            <div class="tool-card" onclick="openTool('unlock')">
+                <div class="tool-icon">🔓</div>
+                <div class="tool-name">Unlock PDF</div>
+                <div class="tool-desc">Remove password</div>
+                <div class="tool-status status-ready">✓ Ready</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div id="toolModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeTool()">&times;</button>
+            <h2 class="modal-title" id="modalTitle">Tool Name</h2>
+            <p class="modal-desc" id="modalDesc">Tool description</p>
+            
+            <div id="statusMessage" class="status-message"></div>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <p class="upload-text" id="uploadText">Click to upload or drag & drop</p>
+                <p class="upload-hint" id="uploadHint">Supported: PDF files</p>
+            </div>
+            <input type="file" id="fileInput" class="file-input" multiple>
+            
+            <div id="fileList" class="file-list"></div>
+            
+            <div id="optionsContainer" class="options-section" style="display: none;"></div>
+            
+            <button class="btn-process" id="processBtn" onclick="processFiles()" disabled>
+                Process Files
+            </button>
+            
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="progress-text" id="progressText">Processing...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTool = null;
+        let uploadedFiles = [];
+        
+        const toolConfigs = {
+            'merge': {
+                title: 'Merge PDF',
+                description: 'Combine multiple PDF files into a single document',
+                accept: '.pdf',
+                multiple: true,
+                endpoint: '/api/merge',
+                options: []
+            },
+            'split': {
+                title: 'Split PDF',
+                description: 'Split a PDF into separate pages (downloads as ZIP)',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/split',
+                options: []
+            },
+            'remove-pages': {
+                title: 'Remove Pages',
+                description: 'Remove specific pages from your PDF',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/remove-pages',
+                options: [
+                    { name: 'pages', label: 'Pages to remove (e.g., 1,3,5-7)', type: 'text', placeholder: '1,3,5-7' }
+                ]
+            },
+            'extract-pages': {
+                title: 'Extract Pages',
+                description: 'Extract specific pages from your PDF',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/extract-pages',
+                options: [
+                    { name: 'pages', label: 'Pages to extract (e.g., 1,3,5-7)', type: 'text', placeholder: '1,3,5-7' }
+                ]
+            },
+            'organize': {
+                title: 'Reorder Pages',
+                description: 'Specify new page order for your PDF',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/organize',
+                options: [
+                    { name: 'order', label: 'New page order (e.g., 3,1,2,5,4)', type: 'text', placeholder: '3,1,2,5,4' }
+                ]
+            },
+            'compress': {
+                title: 'Compress PDF',
+                description: 'Reduce PDF file size while maintaining quality',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/compress',
+                options: [
+                    { name: 'quality', label: 'Compression Level', type: 'select', values: ['Low (Best Quality)', 'Medium', 'High (Smallest Size)'] }
+                ]
+            },
+            'repair': {
+                title: 'Repair PDF',
+                description: 'Attempt to fix corrupted PDF files',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/repair',
+                options: []
+            },
+            'rotate': {
+                title: 'Rotate PDF',
+                description: 'Rotate all pages in your PDF',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/rotate',
+                options: [
+                    { name: 'rotation', label: 'Rotation', type: 'select', values: ['90° Clockwise', '180°', '90° Counter-clockwise'] }
+                ]
+            },
+            'crop': {
+                title: 'Crop PDF',
+                description: 'Trim margins from PDF pages',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/crop',
+                options: [
+                    { name: 'margins', label: 'Margins to crop (mm): top,right,bottom,left', type: 'text', placeholder: '10,10,10,10' }
+                ]
+            },
+            'watermark': {
+                title: 'Add Watermark',
+                description: 'Add text watermark to all pages',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/watermark',
+                options: [
+                    { name: 'text', label: 'Watermark Text', type: 'text', placeholder: 'CONFIDENTIAL' },
+                    { name: 'opacity', label: 'Opacity (%)', type: 'select', values: ['10', '25', '50', '75'] }
+                ]
+            },
+            'page-numbers': {
+                title: 'Add Page Numbers',
+                description: 'Add page numbers to your PDF',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/page-numbers',
+                options: [
+                    { name: 'position', label: 'Position', type: 'select', values: ['Bottom Center', 'Bottom Right', 'Bottom Left', 'Top Center'] },
+                    { name: 'start', label: 'Start Number', type: 'text', placeholder: '1' }
+                ]
+            },
+            'protect': {
+                title: 'Protect PDF',
+                description: 'Add password protection to your PDF',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/protect',
+                options: [
+                    { name: 'password', label: 'Password', type: 'password', placeholder: 'Enter password' }
+                ]
+            },
+            'unlock': {
+                title: 'Unlock PDF',
+                description: 'Remove password from a protected PDF',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/unlock',
+                options: [
+                    { name: 'password', label: 'Current Password', type: 'password', placeholder: 'Enter current password' }
+                ]
+            },
+            'images-to-pdf': {
+                title: 'Images to PDF',
+                description: 'Convert JPG, PNG images to a PDF document',
+                accept: 'image/*',
+                multiple: true,
+                endpoint: '/api/images-to-pdf',
+                options: []
+            },
+            'pdf-to-images': {
+                title: 'PDF to Images',
+                description: 'Convert PDF pages to JPG images (downloads as ZIP)',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/pdf-to-images',
+                options: [
+                    { name: 'dpi', label: 'Quality (DPI)', type: 'select', values: ['72', '150', '300'] }
+                ]
+            },
+            'word-to-pdf': {
+                title: 'Word to PDF',
+                description: 'Convert Microsoft Word documents (DOCX) to PDF',
+                accept: '.docx,.doc',
+                multiple: false,
+                endpoint: '/api/word-to-pdf',
+                options: []
+            },
+            'excel-to-pdf': {
+                title: 'Excel to PDF',
+                description: 'Convert Microsoft Excel spreadsheets (XLSX) to PDF',
+                accept: '.xlsx,.xls',
+                multiple: false,
+                endpoint: '/api/excel-to-pdf',
+                options: []
+            },
+            'pdf-to-word': {
+                title: 'PDF to Word',
+                description: 'Convert PDF to editable Word document (DOCX)',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/pdf-to-word',
+                options: []
+            },
+            'pdf-to-excel': {
+                title: 'PDF to Excel',
+                description: 'Extract tables from PDF to Excel spreadsheet',
+                accept: '.pdf',
+                multiple: false,
+                endpoint: '/api/pdf-to-excel',
+                options: []
+            },
+            'ocr': {
+                title: 'OCR - Text Recognition',
+                description: 'Extract text from images or scanned PDFs using OCR',
+                accept: '.pdf,.jpg,.jpeg,.png,.bmp,.tiff,.gif',
+                multiple: true,
+                endpoint: '/api/ocr',
+                options: [
+                    { name: 'language', label: 'Language', type: 'select', values: ['eng', 'fra', 'deu', 'spa', 'ita', 'por', 'chi_sim', 'jpn', 'kor', 'ara', 'hin'] },
+                    { name: 'output_format', label: 'Output Format', type: 'select', values: ['pdf', 'txt'] }
+                ]
+            }
+        };
+        
+        function openTool(toolName) {
+            currentTool = toolName;
+            const config = toolConfigs[toolName];
+            
+            if (!config) {
+                alert('Tool not found');
+                return;
+            }
+            
+            // Reset state
+            uploadedFiles = [];
+            document.getElementById('fileList').innerHTML = '';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('processBtn').disabled = true;
+            document.getElementById('progressContainer').style.display = 'none';
+            hideStatus();
+            
+            // Set modal content
+            document.getElementById('modalTitle').textContent = config.title;
+            document.getElementById('modalDesc').textContent = config.description;
+            document.getElementById('fileInput').accept = config.accept;
+            document.getElementById('fileInput').multiple = config.multiple;
+            
+            // Update upload hint
+            if (config.accept === '.pdf') {
+                document.getElementById('uploadHint').textContent = 'Supported: PDF files';
+            } else if (config.accept === 'image/*') {
+                document.getElementById('uploadHint').textContent = 'Supported: JPG, PNG, GIF, BMP';
+            } else if (config.accept === '.docx,.doc') {
+                document.getElementById('uploadHint').textContent = 'Supported: Word documents (.docx, .doc)';
+            } else if (config.accept === '.xlsx,.xls') {
+                document.getElementById('uploadHint').textContent = 'Supported: Excel files (.xlsx, .xls)';
+            } else if (config.accept.includes('.pdf') && config.accept.includes('.jpg')) {
+                document.getElementById('uploadHint').textContent = 'Supported: PDF, JPG, PNG, BMP, TIFF, GIF';
+            }
+            
+            document.getElementById('uploadText').textContent = config.multiple ? 
+                'Click to upload or drag & drop files' : 
+                'Click to upload or drag & drop a file';
+            
+            // Build options
+            const optionsContainer = document.getElementById('optionsContainer');
+            if (config.options && config.options.length > 0) {
+                optionsContainer.style.display = 'block';
+                optionsContainer.innerHTML = '<h4>⚙️ Options</h4>' + config.options.map(opt => {
+                    if (opt.type === 'select') {
+                        return `
+                            <div class="option-group">
+                                <label class="option-label">${opt.label}</label>
+                                <select class="option-select" name="${opt.name}" id="opt_${opt.name}">
+                                    ${opt.values.map(v => `<option value="${v}">${v}</option>`).join('')}
+                                </select>
+                            </div>
+                        `;
+                    } else {
+                        return `
+                            <div class="option-group">
+                                <label class="option-label">${opt.label}</label>
+                                <input type="${opt.type}" class="option-input" name="${opt.name}" id="opt_${opt.name}" placeholder="${opt.placeholder || ''}">
+                            </div>
+                        `;
+                    }
+                }).join('');
+            } else {
+                optionsContainer.style.display = 'none';
+            }
+            
+            // Show modal
+            document.getElementById('toolModal').classList.add('active');
+        }
+        
+        function closeTool() {
+            document.getElementById('toolModal').classList.remove('active');
+            uploadedFiles = [];
+        }
+        
+        function showComingSoon() {
+            alert('This feature is coming soon! Stay tuned.');
+        }
+        
+        // File handling
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+        
+        function handleFiles(files) {
+            const config = toolConfigs[currentTool];
+            
+            for (let file of files) {
+                const fileName = file.name.toLowerCase();
+                
+                // Validate file type based on accept attribute
+                let isValid = false;
+                
+                if (config.accept === '.pdf') {
+                    isValid = fileName.endsWith('.pdf');
+                    if (!isValid) {
+                        showStatus('Only PDF files are allowed', 'error');
+                        continue;
+                    }
+                } else if (config.accept === 'image/*') {
+                    isValid = file.type.startsWith('image/');
+                    if (!isValid) {
+                        showStatus('Only image files are allowed', 'error');
+                        continue;
+                    }
+                } else if (config.accept === '.docx,.doc') {
+                    isValid = fileName.endsWith('.docx') || fileName.endsWith('.doc');
+                    if (!isValid) {
+                        showStatus('Only Word documents (.docx, .doc) are allowed', 'error');
+                        continue;
+                    }
+                } else if (config.accept === '.xlsx,.xls') {
+                    isValid = fileName.endsWith('.xlsx') || fileName.endsWith('.xls');
+                    if (!isValid) {
+                        showStatus('Only Excel files (.xlsx, .xls) are allowed', 'error');
+                        continue;
+                    }
+                } else if (config.accept.includes('.pdf') && config.accept.includes('.jpg')) {
+                    // OCR tool - accepts PDFs and images
+                    isValid = fileName.endsWith('.pdf') || 
+                              fileName.endsWith('.jpg') || 
+                              fileName.endsWith('.jpeg') || 
+                              fileName.endsWith('.png') || 
+                              fileName.endsWith('.bmp') || 
+                              fileName.endsWith('.tiff') || 
+                              fileName.endsWith('.gif');
+                    if (!isValid) {
+                        showStatus('Only PDF and image files are allowed for OCR', 'error');
+                        continue;
+                    }
+                } else {
+                    isValid = true; // Default accept all
+                }
+                
+                // Check if already added
+                if (!uploadedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                    uploadedFiles.push(file);
+                }
+            }
+            
+            renderFileList();
+            updateProcessButton();
+            
+            if (uploadedFiles.length > 0) {
+                uploadArea.classList.add('has-files');
+                showStatus(`${uploadedFiles.length} file(s) ready. Files auto-delete after 1 hour.`, 'info');
+            }
+        }
+        
+        function renderFileList() {
+            const container = document.getElementById('fileList');
+            
+            if (uploadedFiles.length === 0) {
+                container.innerHTML = '';
+                uploadArea.classList.remove('has-files');
+                return;
+            }
+            
+            container.innerHTML = uploadedFiles.map((file, index) => `
+                <div class="file-item">
+                    <div class="file-info">
+                        <span class="file-icon">${file.type.startsWith('image/') ? '🖼️' : '📄'}</span>
+                        <div>
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-size">${formatFileSize(file.size)}</div>
+                        </div>
+                    </div>
+                    <button class="file-remove" onclick="removeFile(${index})">Remove</button>
+                </div>
+            `).join('');
+        }
+        
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            renderFileList();
+            updateProcessButton();
+            if (uploadedFiles.length === 0) {
+                hideStatus();
+            }
+        }
+        
+        function updateProcessButton() {
+            const config = toolConfigs[currentTool];
+            const btn = document.getElementById('processBtn');
+            
+            if (uploadedFiles.length === 0) {
+                btn.disabled = true;
+                btn.textContent = 'Upload files first';
+            } else if (!config.multiple && uploadedFiles.length > 1) {
+                btn.disabled = true;
+                btn.textContent = 'Only 1 file allowed';
+            } else {
+                btn.disabled = false;
+                btn.textContent = `Process ${uploadedFiles.length} file(s)`;
+            }
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+        
+        async function processFiles() {
+            if (uploadedFiles.length === 0) return;
+            
+            const config = toolConfigs[currentTool];
+            const btn = document.getElementById('processBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+            progressContainer.style.display = 'block';
+            progressFill.style.width = '0%';
+            progressText.textContent = 'Uploading files...';
+            
+            try {
+                // Build form data
+                const formData = new FormData();
+                uploadedFiles.forEach((file, index) => {
+                    formData.append(`file_${index}`, file);
+                });
+                
+                // Add options
+                const optionInputs = document.querySelectorAll('#optionsContainer input, #optionsContainer select');
+                optionInputs.forEach(input => {
+                    formData.append(input.name, input.value);
+                });
+                
+                // Simulate progress
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    if (progress < 90) {
+                        progress += Math.random() * 15;
+                        progressFill.style.width = Math.min(progress, 90) + '%';
+                    }
+                }, 300);
+                
+                progressText.textContent = 'Processing your files...';
+                
+                // Send request
+                const response = await fetch(config.endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                clearInterval(progressInterval);
+                progressFill.style.width = '100%';
+                
+                if (!response.ok) {
+                    let errorMsg = 'Processing failed';
+                    try {
+                        const errorData = await response.json();
+                        errorMsg = errorData.error || errorMsg;
+                    } catch (e) {}
+                    throw new Error(errorMsg);
+                }
+                
+                progressText.textContent = 'Downloading result...';
+                
+                // Download the result
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                
+                // Determine filename
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = `${currentTool}-result`;
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename="?(.+)"?/);
+                    if (match) filename = match[1];
+                } else {
+                    const contentType = response.headers.get('Content-Type');
+                    if (contentType.includes('pdf')) filename += '.pdf';
+                    else if (contentType.includes('zip')) filename += '.zip';
+                }
+                
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showStatus('✅ Success! File downloaded. Remember: uploads auto-delete after 1 hour.', 'success');
+                
+                // Reset after success
+                setTimeout(() => {
+                    uploadedFiles = [];
+                    renderFileList();
+                    updateProcessButton();
+                    progressContainer.style.display = 'none';
+                }, 2000);
+                
+            } catch (error) {
+                showStatus('❌ Error: ' + error.message, 'error');
+                progressContainer.style.display = 'none';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = `Process ${uploadedFiles.length} file(s)`;
+            }
+        }
+        
+        function showStatus(message, type) {
+            const el = document.getElementById('statusMessage');
+            el.textContent = message;
+            el.className = `status-message status-${type}`;
+            el.style.display = 'block';
+        }
+        
+        function hideStatus() {
+            document.getElementById('statusMessage').style.display = 'none';
+        }
+        
+        // Close modal on outside click
+        document.getElementById('toolModal').addEventListener('click', (e) => {
+            if (e.target.id === 'toolModal') closeTool();
+        });
+        
+        // Close on ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeTool();
+        });
+    </script>
+</body>
+</html>
