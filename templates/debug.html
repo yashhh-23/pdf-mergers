@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug - Check if page loads</title>
+</head>
+<body>
+    <h1>✅ If you see this, the server is working!</h1>
+    <p>Testing connectivity to Flask server at 127.0.0.1:5000</p>
+    
+    <h2>Links:</h2>
+    <ul>
+        <li><a href="/">Simple PDF Merger</a></li>
+        <li><a href="/tools">PDF Tools Suite (29 tools)</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/api/cleanup-status">API: Cleanup Status</a></li>
+    </ul>
+    
+    <h2>Server Status:</h2>
+    <p id="status">Checking server...</p>
+    
+    <script>
+        // Test if /api/cleanup-status works
+        fetch('/api/cleanup-status')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('status').innerHTML = `
+                    ✅ Server is running!<br>
+                    Cleanup running: ${data.cleanup_running}<br>
+                    Tracked files: ${data.total_tracked_files}
+                `;
+            })
+            .catch(e => {
+                document.getElementById('status').innerHTML = `
+                    ❌ Error: ${e.message}<br>
+                    Make sure Flask server is running on http://127.0.0.1:5000
+                `;
+            });
+    </script>
+</body>
+</html>

@@ -14,6 +14,35 @@
         }
         .container { max-width: 1400px; margin: 0 auto; }
         
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .nav-link:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52,152,219,0.3);
+        }
+        
         .expiry-notice {
             background: #fff3cd;
             border: 1px solid #ffc107;
@@ -252,11 +281,15 @@
 </head>
 <body>
     <div class="container">
+        <div class="header-nav">
+            <h1 style="margin: 0;">📄 PDF Tools Suite</h1>
+            <a href="/uploads" class="nav-link">📁 View Uploads</a>
+        </div>
+        
         <div class="expiry-notice">
             ⏰ Uploaded files will be automatically deleted after 1 hour for your privacy
         </div>
         
-        <h1>📄 PDF Tools Suite</h1>
         <p class="subtitle">All-in-one solution for your PDF needs • 20 tools ready to use</p>
         
         <!-- ORGANIZE PDF -->
